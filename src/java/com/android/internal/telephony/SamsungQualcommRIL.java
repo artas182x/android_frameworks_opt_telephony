@@ -324,7 +324,7 @@ public class SamsungQualcommRIL extends RIL implements CommandsInterface {
     }
 
     @Override
-    protected void
+    protected RILRequest
     processSolicited (Parcel p) {
         int serial, error;
         boolean found = false;
