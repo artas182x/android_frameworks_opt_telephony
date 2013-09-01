@@ -169,7 +169,7 @@ public final class MccTable
 
     /**
      * Updates MCC and MNC device configuration information for application retrieving
-     * correct version of resources.  If either MCC or MNC is 0, they will be ignored (not set).
+     * correct version of resources.  If MCC is 0, MCC and MNC will be ignored (not set).
      * @param context Context to act on.
      * @param mccmnc truncated imsi with just the MCC and MNC - MNC assumed to be from 4th to end
      */
@@ -196,9 +196,7 @@ public final class MccTable
                 Configuration config = ActivityManagerNative.getDefault().getConfiguration();
                 if (mcc != 0) {
                     config.mcc = mcc;
-                }
-                if (mnc != 0) {
-                    config.mnc = mnc;
+                    config.mnc = mnc == 0 ? Configuration.MNC_ZERO : mnc;
                 }
                 ActivityManagerNative.getDefault().updateConfiguration(config);
             } catch (RemoteException e) {
@@ -222,11 +220,11 @@ public final class MccTable
         if (null == language) {
             return; // no match possible
         }
-        language = language.toLowerCase();
+        language = language.toLowerCase(Locale.ROOT);
         if (null == country) {
             country = "";
         }
-        country = country.toUpperCase();
+        country = country.toUpperCase(Locale.ROOT);
 
         if((null == l || 0 == l.length()) && (null == c || 0 == c.length())) {
             try {

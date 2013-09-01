@@ -104,6 +104,7 @@ public class CatService extends Handler implements AppInterface {
     private static final int DEV_ID_KEYPAD      = 0x01;
     private static final int DEV_ID_UICC        = 0x81;
     private static final int DEV_ID_TERMINAL    = 0x82;
+    private static final int DEV_ID_NETWORK     = 0x83;
 
     // Samsung STK SEND_SMS
     static final int WAITING_SMS_RESULT = 2;
