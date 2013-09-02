@@ -102,7 +102,7 @@ public class PhoneFactory {
                 // Get preferred network mode
                 int preferredNetworkMode = RILConstants.PREFERRED_NETWORK_MODE;
                 if (TelephonyManager.getLteOnCdmaModeStatic() == PhoneConstants.LTE_ON_CDMA_TRUE) {
-                    preferredNetworkMode = Phone.NT_MODE_GLOBAL;
+                    preferredNetworkMode = Phone.NT_MODE_LTE_CMDA_EVDO_GSM_WCDMA;
                 }
                 if (TelephonyManager.getLteOnGsmModeStatic() != 0) {
                     preferredNetworkMode = Phone.NT_MODE_LTE_GSM_WCDMA;
