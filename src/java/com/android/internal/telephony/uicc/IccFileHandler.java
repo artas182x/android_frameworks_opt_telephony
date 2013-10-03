@@ -471,7 +471,6 @@ public abstract class IccFileHandler extends Handler implements IccConstants {
 
                 data = result.payload;
                 fileid = lc.mEfid;
-                recordNum = lc.mRecordNum;
                 path = lc.mPath;
 
                 if (TYPE_EF != data[RESPONSE_DATA_FILE_TYPE]) {
