@@ -38,20 +38,21 @@ import java.lang.reflect.Constructor;
  */
 public class PhoneFactory {
     static final String LOG_TAG = "PhoneFactory";
-    static final int SOCKET_OPEN_RETRY_MILLIS = 2 * 1000;
-    static final int SOCKET_OPEN_MAX_RETRY = 3;
+    static protected final int SOCKET_OPEN_RETRY_MILLIS = 2 * 1000;
+    static protected final int SOCKET_OPEN_MAX_RETRY = 3;
 
     //***** Class Variables
 
-    static private Phone sProxyPhone = null;
-    static private CommandsInterface sCommandsInterface = null;
+    static protected Phone sProxyPhone = null;
+    static protected CommandsInterface sCommandsInterface = null;
 
-    static private boolean sMadeDefaults = false;
-    static private PhoneNotifier sPhoneNotifier;
-    static private Looper sLooper;
-    static private Context sContext;
+    static protected boolean sMadeDefaults = false;
+    static protected PhoneNotifier sPhoneNotifier;
+    static protected Looper sLooper;
+    static protected Context sContext;
 
-    //***** Class Methods
+    protected static final int sPreferredCdmaSubscription =
+                         CdmaSubscriptionSourceManager.PREFERRED_CDMA_SUBSCRIPTION;
 
     public static void makeDefaultPhones(Context context) {
         makeDefaultPhone(context);
@@ -111,7 +112,20 @@ public class PhoneFactory {
                         Settings.Global.PREFERRED_NETWORK_MODE, preferredNetworkMode);
                 Rlog.i(LOG_TAG, "Network Mode set to " + Integer.toString(networkMode));
 
-                int cdmaSubscription = CdmaSubscriptionSourceManager.getDefault(context);
+                // As per certain operator requirement, the device is expected to be in global
+                // mode from boot up, by enabling the property persist.env.phone.global the
+                // network mode is set to global during boot up.
+                if (SystemProperties.getBoolean("persist.env.phone.global", false)) {
+                    networkMode = Phone.NT_MODE_LTE_CMDA_EVDO_GSM_WCDMA;
+                    Settings.Global.putInt(context.getContentResolver(),
+                            Settings.Global.PREFERRED_NETWORK_MODE, networkMode);
+                }
+
+                // Get cdmaSubscription mode from Settings.Global
+                int cdmaSubscription;
+                cdmaSubscription = Settings.Global.getInt(context.getContentResolver(),
+                                Settings.Global.CDMA_SUBSCRIPTION_MODE,
+                                sPreferredCdmaSubscription);
                 Rlog.i(LOG_TAG, "Cdma Subscription set to " + cdmaSubscription);
 
                 //reads the system properties and makes commandsinterface

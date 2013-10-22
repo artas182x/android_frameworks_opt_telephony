@@ -401,6 +401,7 @@ public abstract class IccFileHandler extends Handler implements IccConstants {
         IccException iccException;
         boolean flag = false;
         IccIoResult result = (IccIoResult) ar.result;
+
         if (ar.exception != null) {
             sendResult(response, null, ar.exception);
             flag = true;
@@ -432,6 +433,58 @@ public abstract class IccFileHandler extends Handler implements IccConstants {
 
         try {
             switch (msg.what) {
+            case EVENT_GET_RECORD_SIZE_IMG_DONE:
+                logd("IccFileHandler: get record size img done");
+                ar = (AsyncResult) msg.obj;
+                lc = (LoadLinearFixedContext) ar.userObj;
+                result = (IccIoResult) ar.result;
+                response = lc.mOnLoaded;
+
+                if (processException(response, (AsyncResult) msg.obj)) {
+                    break;
+                }
+                data = result.payload;
+                lc.mRecordSize = data[RESPONSE_DATA_RECORD_LENGTH] & 0xFF;
+
+                if ((TYPE_EF != data[RESPONSE_DATA_FILE_TYPE]) ||
+                    (EF_TYPE_LINEAR_FIXED != data[RESPONSE_DATA_STRUCTURE])) {
+                    loge("File type mismatch: Throw Exception");
+                    throw new IccFileTypeMismatch();
+                }
+
+                logd("read EF IMG");
+                mCi.iccIOForApp(COMMAND_READ_RECORD, lc.mEfid, getEFPath(lc.mEfid),
+                        lc.mRecordNum,
+                        READ_RECORD_MODE_ABSOLUTE,
+                        lc.mRecordSize, null, null, mAid,
+                        obtainMessage(EVENT_READ_IMG_DONE, IccConstants.EF_IMG, 0, response));
+                break;
+
+           case EVENT_READ_IMG_DONE:
+               logd("read IMG done");
+               ar = (AsyncResult) msg.obj;
+               result = (IccIoResult) ar.result;
+               response = (Message) ar.userObj;
+
+               if (processException(response, (AsyncResult) msg.obj)) {
+                   break;
+               }
+               logd("read img success");
+               sendResult(response, result.payload, null);
+               break;
+
+            case EVENT_READ_ICON_DONE:
+                logd("read icon done");
+                ar = (AsyncResult) msg.obj;
+                response = (Message) ar.userObj;
+                result = (IccIoResult) ar.result;
+
+                if (processException(response, (AsyncResult) msg.obj)) {
+                    break;
+                }
+                logd("read icon success");
+                sendResult(response, result.payload, null);
+                break;
             case EVENT_GET_EF_LINEAR_RECORD_SIZE_DONE:
                 ar = (AsyncResult)msg.obj;
                 lc = (LoadLinearFixedContext) ar.userObj;
