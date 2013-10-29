@@ -511,7 +511,6 @@ public abstract class IccFileHandler extends Handler implements IccConstants {
                 sendResult(response, recordSize, null);
                 break;
 
-             case EVENT_GET_RECORD_SIZE_IMG_DONE:
              case EVENT_GET_RECORD_SIZE_DONE:
                 ar = (AsyncResult)msg.obj;
                 lc = (LoadLinearFixedContext) ar.userObj;
@@ -584,7 +583,6 @@ public abstract class IccFileHandler extends Handler implements IccConstants {
                                               fileid, 0, response));
             break;
 
-            case EVENT_READ_IMG_DONE:
             case EVENT_READ_RECORD_DONE:
 
                 ar = (AsyncResult)msg.obj;
@@ -622,7 +620,6 @@ public abstract class IccFileHandler extends Handler implements IccConstants {
             break;
 
             case EVENT_READ_BINARY_DONE:
-            case EVENT_READ_ICON_DONE:
                 ar = (AsyncResult)msg.obj;
                 response = (Message) ar.userObj;
                 result = (IccIoResult) ar.result;
