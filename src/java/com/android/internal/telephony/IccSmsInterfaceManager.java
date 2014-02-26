@@ -1093,7 +1093,8 @@ public class IccSmsInterfaceManager {
                 }
 
                 mDispatcher.sendText(textAndAddress[1], scAddress, singlePart,
-                        singleSentIntent, singleDeliveryIntent, messageUri, callingPkg);
+                        singleSentIntent, singleDeliveryIntent, messageUri, callingPkg,
+                        -1, false, -1);
             }
             return;
         }
