@@ -351,8 +351,6 @@ class DcController extends StateMachine {
                     mDct.sendStartNetStatPoll(DctConstants.Activity.NONE);
                 }
             }
-=======
->>>>>>> b077af1... Handle DATA_CALL_LIST in DCC and update dataActivity properly
 
             if (DBG) {
                 lr("onDataStateChanged: dcsToRetry=" + dcsToRetry
