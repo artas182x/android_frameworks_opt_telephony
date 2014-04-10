@@ -26,6 +26,7 @@ import android.os.Bundle;
 import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.provider.Telephony;
+import android.telephony.SubscriptionManager;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.util.Log;
@@ -590,7 +591,7 @@ public final class SmsManager {
         if (parts.size() > 1) {
             try {
                 ISms iccISms = getISmsServiceOrThrow();
-                iccISms.sendMultipartTextUsingSubId(subId, ActivityThread.currentPackageName(),
+                iccISms.sendMultipartTextForSubscriber(subId, ActivityThread.currentPackageName(),
                         destinationAddress, scAddress, parts,
                         sentIntents, deliveryIntents);
             } catch (RemoteException ex) {
@@ -1051,7 +1052,7 @@ public final class SmsManager {
         try {
             ISms iccISms = getISmsService();
             if (iccISms != null) {
-                success = iccISms.enableCellBroadcastUsingSubId(subId, messageIdentifier);
+                success = iccISms.enableCellBroadcastForSubscriber(subId, messageIdentifier);
             }
         } catch (RemoteException ex) {
             // ignore it
@@ -1113,7 +1114,7 @@ public final class SmsManager {
         try {
             ISms iccISms = getISmsService();
             if (iccISms != null) {
-                success = iccISms.disableCellBroadcastUsingSubId(subId, messageIdentifier);
+                success = iccISms.disableCellBroadcastForSubscriber(subId, messageIdentifier);
             }
         } catch (RemoteException ex) {
             // ignore it
@@ -1187,7 +1188,7 @@ public final class SmsManager {
         try {
             ISms iccISms = getISmsService();
             if (iccISms != null) {
-                success = iccISms.enableCellBroadcastRangeUsingSubId(subId, startMessageId
+                success = iccISms.enableCellBroadcastRangeForSubscriber(subId, startMessageId
                         ,endMessageId);
             }
         } catch (RemoteException ex) {
@@ -1262,7 +1263,7 @@ public final class SmsManager {
         try {
             ISms iccISms = getISmsService();
             if (iccISms != null) {
-                success = iccISms.disableCellBroadcastRangeUsingSubId(subId, startMessageId, endMessageId);
+                success = iccISms.disableCellBroadcastRangeForSubscriber(subId, startMessageId, endMessageId);
             }
         } catch (RemoteException ex) {
             // ignore it
@@ -1349,37 +1350,11 @@ public final class SmsManager {
     /**
      * Get the default sms subId
      *
-     * @return the default subId
+     * @return the default sms subId
      * @hide
      */
     public static long getDefaultSmsSubId() {
-        ISms iccISms = null;
-        try {
-            iccISms = ISms.Stub.asInterface(ServiceManager.getService("isms"));
-            return (long) iccISms.getPreferredSmsSubscription();
-        } catch (RemoteException ex) {
-            return DEFAULT_SUB_ID;
-        } catch (NullPointerException ex) {
-            return DEFAULT_SUB_ID;
-        }
-    }
-
-    /**
-     * Get SMS prompt property,  enabled or not
-     *
-     * @return true if enabled, false otherwise
-     * @hide
-     */
-    public boolean isSMSPromptEnabled() {
-        ISms iccISms = null;
-        try {
-            iccISms = ISms.Stub.asInterface(ServiceManager.getService("isms"));
-            return iccISms.isSMSPromptEnabled();
-        } catch (RemoteException ex) {
-            return false;
-        } catch (NullPointerException ex) {
-            return false;
-        }
+        return SubscriptionManager.getDefaultSmsSubId();
     }
 
     // see SmsMessage.getStatusOnIcc
