@@ -391,11 +391,6 @@ public class IccCardProxy extends Handler implements IccCard {
          }
     }
 
-    private void HandleDetectedState() {
-    // CAF_MSIM SAND
-//        setExternalState(State.DETECTED, false);
-    }
-
     private void updateExternalState() {
         if (mUiccCard == null || mUiccCard.getCardState() == CardState.CARDSTATE_ABSENT) {
             if (mRadioOn) {
@@ -419,9 +414,6 @@ public class IccCardProxy extends Handler implements IccCard {
         switch (mUiccApplication.getState()) {
             case APPSTATE_UNKNOWN:
                 setExternalState(State.UNKNOWN);
-                break;
-            case APPSTATE_DETECTED:
-                HandleDetectedState();
                 break;
             case APPSTATE_PIN:
                 setExternalState(State.PIN_REQUIRED);
