@@ -738,8 +738,7 @@ public class RIL extends BaseCommands implements CommandsInterface {
         }
 
         RILRequest rr = RILRequest.obtain(RIL_REQUEST_ALLOW_DATA, result);
-         if (RILJ_LOGD) riljLog(rr.serialString() + "> " + requestToString(rr.mRequest)
-                + " " + allowed);
+        if (RILJ_LOGD) riljLog(rr.serialString() + "> " + requestToString(rr.mRequest));
 
         rr.mParcel.writeInt(1);
         rr.mParcel.writeInt(allowed ? 1 : 0);
