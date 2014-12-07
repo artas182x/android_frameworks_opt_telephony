@@ -935,13 +935,4 @@ public class SmsMessage {
 
         return false;
     }
-
-    /**
-     * {@hide}
-     * Returns the recipient address(receiver) of this SMS message in String form or null if
-     * unavailable.
-     */
-    public String getRecipientAddress() {
-        return mWrappedSmsMessage.getRecipientAddress();
-    }
 }
