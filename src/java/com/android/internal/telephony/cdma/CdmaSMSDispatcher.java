@@ -122,10 +122,9 @@ public class CdmaSMSDispatcher extends SMSDispatcher {
     /** {@inheritDoc} */
     @Override
     protected void sendText(String destAddr, String scAddr, String text, PendingIntent sentIntent,
-            PendingIntent deliveryIntent, Uri messageUri, String callingPkg,
-            int priority, boolean isExpectMore, int validityPeriod) {
+            PendingIntent deliveryIntent, Uri messageUri, String callingPkg) {
         SmsMessage.SubmitPdu pdu = SmsMessage.getSubmitPdu(
-                scAddr, destAddr, text, (deliveryIntent != null), null, priority);
+                scAddr, destAddr, text, (deliveryIntent != null), null);
         if (pdu != null) {
             if (messageUri == null) {
                 if (SmsApplication.shouldWriteMessageForPackage(callingPkg, mContext)) {
@@ -141,7 +140,7 @@ public class CdmaSMSDispatcher extends SMSDispatcher {
             }
             HashMap map = getSmsTrackerMap(destAddr, scAddr, text, pdu);
             SmsTracker tracker = getSmsTracker(map, sentIntent, deliveryIntent, getFormat(),
-                    messageUri, isExpectMore, validityPeriod);
+                    messageUri, false);
             sendSubmitPdu(tracker);
         } else {
             Rlog.e(TAG, "CdmaSMSDispatcher.sendText(): getSubmitPdu() returned null");
@@ -166,7 +165,6 @@ public class CdmaSMSDispatcher extends SMSDispatcher {
     protected void sendNewSubmitPdu(String destinationAddress, String scAddress,
             String message, SmsHeader smsHeader, int encoding,
             PendingIntent sentIntent, PendingIntent deliveryIntent, boolean lastPart,
-            int priority, boolean isExpectMore, int validityPeriod,
             AtomicInteger unsentPartCount, AtomicBoolean anyPartFailed, Uri messageUri) {
         UserData uData = new UserData();
         uData.payloadStr = message;
@@ -183,13 +181,12 @@ public class CdmaSMSDispatcher extends SMSDispatcher {
          * callback to the sender when that last fragment delivery
          * has been acknowledged. */
         SmsMessage.SubmitPdu submitPdu = SmsMessage.getSubmitPdu(destinationAddress,
-                uData, (deliveryIntent != null) && lastPart, priority);
+                uData, (deliveryIntent != null) && lastPart);
 
         HashMap map = getSmsTrackerMap(destinationAddress, scAddress,
                 message, submitPdu);
-        SmsTracker tracker = getSmsTracker(map, sentIntent,
-                deliveryIntent, getFormat(), unsentPartCount, anyPartFailed, messageUri, smsHeader,
-                (!lastPart || isExpectMore), validityPeriod);
+        SmsTracker tracker = getSmsTracker(map, sentIntent, deliveryIntent,
+                getFormat(), unsentPartCount, anyPartFailed, messageUri, smsHeader, false);
         sendSubmitPdu(tracker);
     }
 
