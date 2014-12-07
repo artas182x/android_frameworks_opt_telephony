@@ -305,13 +305,13 @@ public class UiccSmsController extends ISms.Stub {
 
     @Override
     public void updateSmsSendStatus(int messageRef, boolean success) {
-        getIccSmsInterfaceManager(getDefaultSmsSubId())
+        getIccSmsInterfaceManager(SubscriptionManager.getDefaultSmsSubId())
             .updateSmsSendStatus(messageRef, success);
     }
 
     @Override
     public void injectSmsPdu(byte[] pdu, String format, PendingIntent receivedIntent) {
-        injectSmsPdu(getDefaultSmsSubId(), pdu, format, receivedIntent);
+        injectSmsPdu(SubscriptionManager.getDefaultSmsSubId(), pdu, format, receivedIntent);
     }
 
     // FIXME: Add injectSmsPdu to ISms.aidl

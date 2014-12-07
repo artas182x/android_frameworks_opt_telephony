@@ -314,7 +314,7 @@ public final class SmsManager {
             String destinationAddress, String scAddress, String text,
             PendingIntent sentIntent, PendingIntent deliveryIntent, int priority,
             boolean isExpectMore, int validityPeriod) {
-        sendTextMessage(getDefaultSmsSubId(), destinationAddress, scAddress, text,
+        sendTextMessage(getPreferredSmsSubscription(), destinationAddress, scAddress, text,
                 sentIntent, deliveryIntent, priority, isExpectMore, validityPeriod);
     }
 
@@ -673,7 +673,7 @@ public final class SmsManager {
             String destinationAddress, String scAddress, ArrayList<String> parts,
             ArrayList<PendingIntent> sentIntents, ArrayList<PendingIntent> deliveryIntents,
             int priority, boolean isExpectMore, int validityPeriod) {
-        sendMultipartTextMessage(getDefaultSmsSubId(), destinationAddress, scAddress,
+        sendMultipartTextMessage(getPreferredSmsSubscription(), destinationAddress, scAddress,
                 parts, sentIntents, deliveryIntents, priority, isExpectMore, validityPeriod);
     }
 
