@@ -46,7 +46,7 @@ public class UiccPhoneBookController extends IIccPhoneBook.Stub {
     public boolean
     updateAdnRecordsInEfBySearch (int efid, String oldTag, String oldPhoneNumber,
             String newTag, String newPhoneNumber, String pin2) throws android.os.RemoteException {
-        return updateAdnRecordsInEfBySearchForSubscriber(getDefaultSubId(), efid, oldTag,
+        return updateAdnRecordsInEfBySearchForSubscriber(getDefaultSubscription(), efid, oldTag,
                 oldPhoneNumber, newTag, newPhoneNumber, pin2);
     }
 
@@ -69,7 +69,7 @@ public class UiccPhoneBookController extends IIccPhoneBook.Stub {
     public boolean
     updateAdnRecordsInEfByIndex(int efid, String newTag,
             String newPhoneNumber, int index, String pin2) throws android.os.RemoteException {
-        return updateAdnRecordsInEfByIndexForSubscriber(getDefaultSubId(), efid, newTag,
+        return updateAdnRecordsInEfByIndexForSubscriber(getDefaultSubscription(), efid, newTag,
                 newPhoneNumber, index, pin2);
     }
 
@@ -89,7 +89,7 @@ public class UiccPhoneBookController extends IIccPhoneBook.Stub {
     }
 
     public int[] getAdnRecordsSize(int efid) throws android.os.RemoteException {
-        return getAdnRecordsSizeForSubscriber(getDefaultSubId(), efid);
+        return getAdnRecordsSizeForSubscriber(getDefaultSubscription(), efid);
     }
 
     public int[]
@@ -106,7 +106,7 @@ public class UiccPhoneBookController extends IIccPhoneBook.Stub {
     }
 
     public List<AdnRecord> getAdnRecordsInEf(int efid) throws android.os.RemoteException {
-        return getAdnRecordsInEfForSubscriber(getDefaultSubId(), efid);
+        return getAdnRecordsInEfForSubscriber(getDefaultSubscription(), efid);
     }
 
     public List<AdnRecord> getAdnRecordsInEfForSubscriber(long subId, int efid)
@@ -127,9 +127,10 @@ public class UiccPhoneBookController extends IIccPhoneBook.Stub {
      **/
     private IccPhoneBookInterfaceManagerProxy
             getIccPhoneBookInterfaceManagerProxy(long subId) {
-        int phoneId = SubscriptionController.getInstance().getPhoneId(subId);
+
+        long phoneId = SubscriptionController.getInstance().getPhoneId(subId);
         try {
-            return ((PhoneProxy)mPhone[phoneId]).getIccPhoneBookInterfaceManagerProxy();
+            return ((PhoneProxy)mPhone[(int)phoneId]).getIccPhoneBookInterfaceManagerProxy();
         } catch (NullPointerException e) {
             Rlog.e(TAG, "Exception is :"+e.toString()+" For subscription :"+subId );
             e.printStackTrace(); //To print stack trace
@@ -141,7 +142,7 @@ public class UiccPhoneBookController extends IIccPhoneBook.Stub {
         }
     }
 
-    private long getDefaultSubId() {
-        return SubscriptionController.getInstance().getDefaultSubId();
+    private long getDefaultSubscription() {
+        return PhoneFactory.getDefaultSubscription();
     }
 }
