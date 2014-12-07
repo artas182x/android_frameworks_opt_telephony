@@ -47,7 +47,6 @@ import android.os.SystemProperties;
 import android.telephony.Rlog;
 import android.telephony.ServiceState;
 import android.telephony.TelephonyManager;
-import android.telephony.SubscriptionManager;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.util.Patterns;
@@ -941,10 +940,6 @@ public final class DataConnection extends StateMachine {
                     }
                     default:
                 }
-                if (mPhone.getSubId() != SubscriptionManager.getDefaultDataSubId()) {
-                    log("DataConnection on non-dds does not have INTERNET capability.");
-                    result.removeCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET);
-                }
             }
             ConnectivityManager.maybeMarkCapabilitiesRestricted(result);
         }
@@ -970,7 +965,6 @@ public final class DataConnection extends StateMachine {
         }
         result.setLinkUpstreamBandwidthKbps(up);
         result.setLinkDownstreamBandwidthKbps(down);
-        result.setNetworkSpecifier("" + mPhone.getSubId());
         return result;
     }
 
@@ -1726,10 +1720,9 @@ public final class DataConnection extends StateMachine {
                     mNetworkInfo.getReason(), null);
             mNetworkInfo.setExtraInfo(mApnSetting.apn);
             updateTcpBufferSizes(mRilRat);
-            mNetworkAgent = new DcNetworkAgent(getHandler().getLooper(),
-                    mPhone.getContext(),
-                    "DcNetworkAgent" + mPhone.getSubId(), mNetworkInfo,
-                    makeNetworkCapabilities(), mLinkProperties, 50);
+            mNetworkAgent = new DcNetworkAgent(getHandler().getLooper(), mPhone.getContext(),
+                    "DcNetworkAgent", mNetworkInfo, makeNetworkCapabilities(), mLinkProperties,
+                    50);
         }
 
         @Override

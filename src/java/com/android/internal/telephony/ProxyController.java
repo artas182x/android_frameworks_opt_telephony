@@ -31,7 +31,6 @@ package com.android.internal.telephony;
 
 import android.content.Context;
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.Message;
 
 import android.telephony.Rlog;
@@ -95,10 +94,7 @@ public class ProxyController {
         mUiccController = uiccController;
         mCi = ci;
 
-        HandlerThread t = new HandlerThread("DctControllerThread");
-        t.start();
-
-        mDctController = DctController.makeDctController((PhoneProxy[])phoneProxy, t.getLooper());
+        mDctController = DctController.makeDctController((PhoneProxy[])phoneProxy);
         mUiccPhoneBookController = new UiccPhoneBookController(mProxyPhones);
         mPhoneSubInfoController = new PhoneSubInfoController(mProxyPhones);
         mUiccSmsController = new UiccSmsController(mProxyPhones);
