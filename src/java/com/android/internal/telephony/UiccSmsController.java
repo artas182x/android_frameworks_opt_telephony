@@ -130,7 +130,7 @@ public void sendDataWithOrigPort(String callingPackage, String destAddr, String 
                  scAddr, destPort, origPort, data, sentIntent, deliveryIntent);
     }
 
-    public void sendDataWithOrigPortUsingSubscriber(long subId, String callingPackage,
+    ppublic void sendDataWithOrigPortUsingSubscriber(long subId, String callingPackage,
             String destAddr, String scAddr, int destPort, int origPort, byte[] data,
             PendingIntent sentIntent, PendingIntent deliveryIntent) {
         IccSmsInterfaceManager iccSmsIntMgr = getIccSmsInterfaceManager(subId);
